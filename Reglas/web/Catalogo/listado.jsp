@@ -80,24 +80,32 @@
                 </div>
                 <!-- /container -->
         </div>
-        <div><h2>${mensaje}</h2></div>
 		<div class="inner-page">
-                    <div><h2>Acción a realizar:</h2></div>
-                    
-                    <div>
-                        <form class="form-horizontal" role="form" action="Consultar" method="post">
-                            <input hidden="true" name="usuario" id="usuario" value="${usuario}">
-                            <center><button style="width: 50%; background-color: #0088cc; border-color: #0088cc;" class="btn btn-custom-primary btn-lg btn-block btn-link" type="submit"><i class="fa fa-search"></i> Consultar Reglas</button></center>
-                        </form>
-                        <h4></h4>
-                        <form class="form-horizontal" role="form" action="Crear" method="post">
-                            <input hidden="true" name="usuario" id="usuario" value="${usuario}">
-                            <center><button style="width: 50%;" class="btn btn-custom-primary btn-lg btn-block btn-login" type="submit"><i class="fa fa-arrow-circle-o-right"></i> Crear una Nueva Regla</button></center>
-                        </form>
-                    </div>
-                    </div>
+                    <div><h2>Listado de Reglas</h2></div>
+      <!-- main -->
+      <div class="content">
+        <div class="main-content">
+          <div class="widget widget-table">
+            <div class="widget-header" >
+              <h3><i class="fa fa-users"></i> Catalogo </h3>
+            </div>
+            <div class="widget-content" >
+                <center><table class="table-sorting table-striped table-hover datatable" style="width:90%">
+                  <tr>
+                  <strong><th>Nombre</th></strong>
+                  <strong><th>Imagen</th></strong> 
+                  </tr>
+                    <tr>
+                        <td>Hola</td>
+                        <td>Hola2</td>
+                    </tr>
+                    </table></center>
+            </div>
+          </div>
         </div>
-<body>
+      </div>
+    </div>
+                    </div>
         <footer class="footer">&copy; 2016 Reglas - Josué & Andrés</footer>
 
 	<!-- Javascript -->

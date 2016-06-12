@@ -7,8 +7,11 @@ package Servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import Utilidades.HelpersHTML;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -17,14 +20,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  *
  * @author Josue
  */
-@WebServlet(name = "Competencias", urlPatterns = {"/Competencias/Competencias.jsp"})
-public class Competencias extends HttpServlet {
+@WebServlet(name = "Consultar", urlPatterns = {"/Consultar"})
+public class Consultar extends HttpServlet {
 
+    private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,10 +48,10 @@ public class Competencias extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Competencias</title>");            
+            out.println("<title>Servlet Consultar</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Competencias at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Consultar at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,10 +69,7 @@ public class Competencias extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String competencias = ";";
-        request.setAttribute("message", request.getAttribute("message"));
-        request.getRequestDispatcher("/Competencias/index.jsp").forward(request, response);
-        request.setAttribute("competencias", competencias);
+        request.getRequestDispatcher("/index.htm").forward(request, response);
     }
 
     /**
@@ -80,9 +83,20 @@ public class Competencias extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+
+    PrintWriter out;
+    out = response.getWriter();
+    request.setCharacterEncoding("UTF-8");
+    String usuario = request.getParameter("usuario");
+    request.setAttribute("usuario", usuario);
+    redireccionar(request, response, "/Catalogo/listado.jsp");
     }
 
+    protected void redireccionar(HttpServletRequest request, HttpServletResponse response, String redireccion) throws ServletException, IOException {
+        RequestDispatcher vista = request.getRequestDispatcher(redireccion);
+        vista.forward(request, response);
+    }
     /**
      * Returns a short description of the servlet.
      *
