@@ -11,7 +11,13 @@ import Utilidades.HelpersHTML;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -26,8 +32,8 @@ import jdk.nashorn.internal.parser.JSONParser;
  *
  * @author Josue
  */
-@WebServlet(name = "IniciarSesion", urlPatterns = {"/IniciarSesion"})
-public class IniciarSesion extends HttpServlet {
+@WebServlet(name = "Crear", urlPatterns = {"/Crear"})
+public class Crear extends HttpServlet {
 
     private final HelpersHTML helper = HelpersHTML.getSingletonHelpersHTML();
     
@@ -48,10 +54,10 @@ public class IniciarSesion extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet IniciarSesion</title>");            
+            out.println("<title>Servlet Crear</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet IniciarSesion at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Crear at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -88,28 +94,84 @@ public class IniciarSesion extends HttpServlet {
     PrintWriter out;
     out = response.getWriter();
     request.setCharacterEncoding("UTF-8");
-
-    HelpersHTML h = new HelpersHTML();
-    
     String usuario = request.getParameter("usuario");
-    String contrasenna = request.getParameter("contrasena");
-    if ((usuario.equals("josue") || usuario.equals("andres")) && contrasenna.equals("1234"))
-    {
-        String mensaje = "Bienvenido "+usuario+".";
-        request.setAttribute("mensaje", h.mensajeDeExito(mensaje));
+    request.setAttribute("usuario", usuario);
+    
+    //set attributes de Lista Tablas entidades, Atributos según tabla y Tipo
+    List<String> tipos = new ArrayList<String>();
+        tipos.add("Valores válidos");
+        tipos.add("Formato");
+        tipos.add("Referencia");
+        tipos.add("Dependencia");
+        tipos.add("Históricos");
+        tipos.add("Otros");
+    List<String> entidades = new ArrayList<String>();
+    List<String> atributos = new ArrayList<String>();
+    
+    try {
         
-        request.setAttribute("usuario", usuario);
-        redireccionar(request, response, "/Catalogo/index.jsp");
+        Class.forName("org.postgresql.Driver");
         
-        //request.setAttribute("catalogo", catalogo);
+    } catch (ClassNotFoundException e) {
+        
+        System.out.println("Where is your PostgreSQL JDBC Driver? "
+                + "Include in your library path!");
+        e.printStackTrace();
+        return;
+        
     }
-    else {
-        String mensaje = "Usuario o contraseña incorrectos.";
-        request.setAttribute("mensaje", h.mensajeDeError(mensaje));
+    
+    Connection connection = null;
+    
+    try {
+        connection = DriverManager.getConnection(
+                "jdbc:postgresql://127.0.0.1:5432/reglas", "postgres",
+                "Solaris2014");
         
-        redireccionar(request, response, "/index.jsp");
+    } catch (SQLException e) {
+        
+        System.out.println("Connection Failed! Check output console");
+        e.printStackTrace();
+        return;
+        
     }
-
+    
+    if (connection != null) {
+        try {
+            PreparedStatement consulta;
+            consulta = connection.prepareStatement(" SELECT * FROM reglas.entidad; ");
+            ResultSet rs = consulta.executeQuery();
+            
+            while (rs.next()) {
+                entidades.add(rs.getString("nombreEntidad"));
+            }
+            rs.close();
+            consulta.close();
+            
+            PreparedStatement consulta2;
+            consulta2 = connection.prepareStatement(" SELECT * FROM reglas.atributo; ");
+            ResultSet rs2 = consulta2.executeQuery();
+            
+            while (rs2.next()) {
+                atributos.add(rs2.getString("nombreAtributo"));
+            }
+            rs2.close();
+            consulta2.close();
+            
+            connection.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Se produjo un error al procesar la solicitud");
+        }
+        //return resultado;
+    } else {
+        System.out.println("Failed to make connection!");
+    }
+    
+    request.setAttribute("entidades", entidades);
+    request.setAttribute("atributos", atributos);
+    request.setAttribute("tipos", tipos);
+    redireccionar(request, response, "/Catalogo/crear.jsp");
     }
 
     protected void redireccionar(HttpServletRequest request, HttpServletResponse response, String redireccion) throws ServletException, IOException {
