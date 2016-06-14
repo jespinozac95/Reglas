@@ -146,12 +146,12 @@
                                         <c:forEach items="${reglas}" var="regla">
                                             <tr>
                                                 <th style="font-size:80%">
-                                                    <a href="/Reglas/Catalogo/ConsultarRegla?idRegla=${regla.id}">
+                                                    <a href="/Reglas/Catalogo/ConsultarRegla?idRegla=${regla.id}&usuario=${usuario}">
                                                         ${regla.id}
                                                     </a>
                                                 </th>
                                                 <th style="font-size:80%">
-                                                    <a href="/Reglas/Catalogo/ConsultarRegla?idRegla=${regla.id}">
+                                                    <a href="/Reglas/Catalogo/ConsultarRegla?idRegla=${regla.id}&usuario=${usuario}">
                                                         ${regla.nombre}
                                                     </a>
                                                 </th>

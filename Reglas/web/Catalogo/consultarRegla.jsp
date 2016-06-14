@@ -41,7 +41,7 @@
                 <div class="row" style="height: 50%; font-family: 'latolight'">
                     <!-- logo -->
                     <div class="col-md-2 logo" style="margin-bottom: 0px">
-                        <a href="index.jsp">
+                        <a href="/Reglas/index.jsp">
                             <img src="/Reglas/recursos/imagenes/catalog.png" style="width: 10%; height: 10%" alt="Reglas">
                             <p style="color:white">Reglas</p>
                         </a>
