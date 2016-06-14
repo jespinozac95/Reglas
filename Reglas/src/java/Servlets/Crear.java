@@ -99,7 +99,7 @@ public class Crear extends HttpServlet {
     
     //set attributes de Lista Tablas entidades, Atributos según tabla y Tipo
     List<String> tipos = new ArrayList<String>();
-        tipos.add("Valores válidos");
+        tipos.add("Valores_válidos");
         tipos.add("Formato");
         tipos.add("Referencia");
         tipos.add("Dependencia");

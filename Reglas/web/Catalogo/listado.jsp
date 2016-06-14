@@ -33,6 +33,9 @@
         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="recursos/imagenes/catalog.png">
         <link rel="shortcut icon" href="recursos/imagenes/catalog.png">
         
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"/>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/u/dt/dt-1.10.12/datatables.min.css"/>
+        
     </head>
     <div class="wrapper full-page-wrapper page-login text-center">
         <div class="top-bar" style="height: 50%">
@@ -81,31 +84,91 @@
             <!-- /container -->
         </div>
         <div><h2>${mensaje}</h2></div>
-        <div class="inner-page">
+        <center>
+        <div class="inner-page" style="width: 80%">
             <div><h2>Listado de Reglas</h2></div>
+            <div><h3>Filtrado</h3></div>
             <!-- main -->
+            <table border="0" cellspacing="5" cellpadding="5">
+                <tbody>
+                    <tr>
+                        <td>Según Entidad: </td>
+                        <td>
+                            <select class="form-control" id="entid" name="entid" style='background-color: white;'>
+                                <option value=""></option>
+                                <c:forEach items="${entidades}" var="entidad">
+                                    <option value="${entidad}"> ${entidad}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Según Atributo: </td>
+                        <td>
+                            <select class="form-control" id="atrib" name="atrib" style='background-color: white;'>
+                                <option value=""></option>
+                                <c:forEach items="${atributos}" var="atributo">
+                                    <option value="${atributo}"> ${atributo}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Según Tipo: </td>
+                        <td>
+                            <select class="form-control" id="tip" name="tip" style='background-color: white;'>
+                                <option value=""></option>
+                                <c:forEach items="${tipos}" var="tipo">
+                                    <option value="${tipo}"> ${tipo}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3></h3>
             <div class="content">
                 <div class="main-content">
                     <div class="widget widget-table">
-                        <div class="widget-header" >
-                            <h3><i class="fa fa-users"></i> Catalogo </h3>
-                        </div>
                         <div class="widget-content" >
-                            <center><table class="table-sorting table-striped table-hover datatable" style="width:90%">
-                                    <tr>
-                                    <strong><th>Nombre</th></strong>
-                                    <strong><th>Imagen</th></strong> 
-                                    </tr>
-                                    <tr>
-                                        <td>Hola</td>
-                                        <td>Hola2</td>
-                                    </tr>
-                                </table></center>
+                            <center>
+                                <table id="example" class="display" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-family:verdana;">ID</th>
+                                            <th style="font-family:verdana;">Nombre de la Regla</th>
+                                            <th style="font-family:verdana;">Entidad</th>
+                                            <th style="font-family:verdana;">Atributo</th> 
+                                            <th style="font-family:verdana;">Tipo</th> 
+                                        </tr>                                        
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${reglas}" var="regla">
+                                            <tr>
+                                                <th style="font-size:80%">
+                                                    <a href="/Reglas/Catalogo/ConsultarRegla?idRegla=${regla.id}">
+                                                        ${regla.id}
+                                                    </a>
+                                                </th>
+                                                <th style="font-size:80%">
+                                                    <a href="/Reglas/Catalogo/ConsultarRegla?idRegla=${regla.id}">
+                                                        ${regla.nombre}
+                                                    </a>
+                                                </th>
+                                                <th style="font-size:80%">${regla.entidad}</th>
+                                                <th style="font-size:80%">${regla.atributo}</th>
+                                                <th style="font-size:80%">${regla.tipo}</th>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </center>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        </center>
     </div>
     <footer class="footer">&copy; 2016 Reglas - Josué & Andrés</footer>
     
@@ -113,5 +176,9 @@
     <script src="/Reglas/recursos/js/jquery/jquery-2.1.0.min.js"></script>
     <script src="/Reglas/recursos/js/bootstrap/bootstrap.js"></script>
     <script src="/Reglas/recursos/js/plugins/modernizr/modernizr.js"></script>
+    <script src="/Reglas/recursos/js/Reglas/listado.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-1.12.3.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/u/dt/dt-1.10.12/datatables.min.js"></script>
 </body>
 </html>

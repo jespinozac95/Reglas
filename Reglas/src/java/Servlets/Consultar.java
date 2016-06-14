@@ -21,6 +21,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import jdk.nashorn.internal.parser.JSONParser;
+import Modelos.regla;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -90,6 +97,100 @@ public class Consultar extends HttpServlet {
     request.setCharacterEncoding("UTF-8");
     String usuario = request.getParameter("usuario");
     request.setAttribute("usuario", usuario);
+    
+    List<String> tipos = new ArrayList<String>();
+        tipos.add("Valores_válidos");
+        tipos.add("Formato");
+        tipos.add("Referencia");
+        tipos.add("Dependencia");
+        tipos.add("Históricos");
+        tipos.add("Otros");
+    List<String> entidades = new ArrayList<String>();
+    List<String> atributos = new ArrayList<String>();
+    
+    // cargar todas las reglas
+    List<regla> reglas = new ArrayList<regla>();
+        
+        // get entidades, atributos y tipos
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your PostgreSQL JDBC Driver? "
+                    + "Include in your library path!");
+            e.printStackTrace();
+            return;
+        }
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(
+                    "jdbc:postgresql://127.0.0.1:5432/reglas", "postgres",
+                    "Solaris2014");
+        } catch (SQLException e) {
+
+            System.out.println("Connection Failed! Check output console");
+            e.printStackTrace();
+            return;
+        }
+        if (connection != null) {
+            try {
+                PreparedStatement consulta;
+                consulta = connection.prepareStatement(" "+ 
+"select r.idRegla, nombreRegla, definicionFormal, definicionInformal, tipo, codigosql as sql, re.nombreEntidad, ra.nombreAtributo from reglas.regla r" +
+" inner join reglas.regla_entidad re on re.idRegla = r.idRegla" +
+" inner join reglas.atributo_regla ra on ra.idRegla = r.idRegla; ");
+                ResultSet rs = consulta.executeQuery();
+
+                while (rs.next()) {
+                    regla r = new regla();
+                    
+                    r.setId(rs.getInt("idRegla"));                    
+                    r.setNombre(rs.getString("nombreRegla"));                    
+                    r.setDefinicionFormal(rs.getString("definicionFormal"));                    
+                    r.setDefinicionInformal(rs.getString("definicionInformal"));                    
+                    r.setTipo(rs.getString("tipo"));                    
+                    r.setSql(rs.getString("sql"));                    
+                    r.setEntidad(rs.getString("nombreEntidad"));                    
+                    r.setAtributo(rs.getString("nombreAtributo"));                    
+                    
+                    reglas.add(r);
+                }
+                rs.close();
+                consulta.close();
+
+                PreparedStatement consulta3;
+                consulta3 = connection.prepareStatement(" SELECT * FROM reglas.entidad; ");
+                ResultSet rs3 = consulta3.executeQuery();
+
+                while (rs3.next()) {
+                    entidades.add(rs3.getString("nombreEntidad"));
+                }
+                rs3.close();
+                consulta3.close();
+
+                PreparedStatement consulta2;
+                consulta2 = connection.prepareStatement(" SELECT * FROM reglas.atributo; ");
+                ResultSet rs2 = consulta2.executeQuery();
+
+                while (rs2.next()) {
+                    atributos.add(rs2.getString("nombreAtributo"));
+                }
+                rs2.close();
+                consulta2.close();
+                
+                connection.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println("Se produjo un error al procesar la solicitud");
+            }
+            //return resultado;
+        } else {
+            System.out.println("Failed to make connection!");
+        }
+        
+    request.setAttribute("entidades", entidades);
+    request.setAttribute("atributos", atributos);
+    request.setAttribute("tipos", tipos);
+    request.setAttribute("reglas", reglas);
     redireccionar(request, response, "/Catalogo/listado.jsp");
     }
 

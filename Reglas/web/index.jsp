@@ -39,6 +39,7 @@
                     <div class="logo">
 				<a href="index.jsp">
 					<img height="10%" width="10%" src="recursos/imagenes/catalog.png" alt="" />
+                                        <h1 style="color: black">Catálogo de Reglas</h1>
 				</a>
 			</div>
 
